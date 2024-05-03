@@ -3,7 +3,7 @@
 #include <math.h>
 
 #define CHECK(bit, offset) ((bit) & (1 << (offset)))
-#define SET(bitPtr, offset) (*(bitPtr) |= (1 << (offset)))
+#define SET(bit, offset) ((bit) |= (1 << (offset)))
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
       long j_ind = j / 8;
       char j_off = j % 8;
 
-      SET(&sieve[j_ind], j_off);
+      SET(sieve[j_ind], j_off);
     }
   }
 
