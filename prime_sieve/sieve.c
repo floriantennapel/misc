@@ -22,22 +22,28 @@ int main(int argc, char *argv[]) {
   long n = atol(argv[1]);
   long size = (n + 7) / 8;
   bits* sieve = calloc(size, sizeof(bits));
+  if (!sieve) {
+    perror("");
+    return EXIT_FAILURE;
+  }
 
-  for (long i = 2; i <= sqrt(n) + 1; i++) {
+  long final = sqrt(n) + 1;
+
+  for (long i = 2; i <= final; i++) {
     long index = i / 8;
     char offset = i % 8;
 
-    bits* bs = &sieve[index];
+    bits bs = sieve[index];
     char bit;
     switch (offset) {
-      case 0: bit = bs->_1; break;
-      case 1: bit = bs->_2; break;
-      case 2: bit = bs->_3; break;
-      case 3: bit = bs->_4; break;
-      case 4: bit = bs->_5; break;
-      case 5: bit = bs->_6; break;
-      case 6: bit = bs->_7; break;
-      case 7: bit = bs->_8; break;
+      case 0: bit = bs._1; break;
+      case 1: bit = bs._2; break;
+      case 2: bit = bs._3; break;
+      case 3: bit = bs._4; break;
+      case 4: bit = bs._5; break;
+      case 5: bit = bs._6; break;
+      case 6: bit = bs._7; break;
+      case 7: bit = bs._8; break;
     }
 
     if (bit) {
@@ -72,17 +78,17 @@ int main(int argc, char *argv[]) {
     long index = i / 8;
     char offset = i % 8;
 
-    bits* bs = &sieve[index];
+    bits bs = sieve[index];
     char bit;
     switch (offset) {
-      case 0: bit = bs->_1; break;
-      case 1: bit = bs->_2; break;
-      case 2: bit = bs->_3; break;
-      case 3: bit = bs->_4; break;
-      case 4: bit = bs->_5; break;
-      case 5: bit = bs->_6; break;
-      case 6: bit = bs->_7; break;
-      case 7: bit = bs->_8; break;
+      case 0: bit = bs._1; break;
+      case 1: bit = bs._2; break;
+      case 2: bit = bs._3; break;
+      case 3: bit = bs._4; break;
+      case 4: bit = bs._5; break;
+      case 5: bit = bs._6; break;
+      case 6: bit = bs._7; break;
+      case 7: bit = bs._8; break;
     }
 
     if (!bit) {
