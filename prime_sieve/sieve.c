@@ -1,17 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <math.h>
 
 typedef struct {
-  unsigned char _1: 1;
-  unsigned char _2: 1;
-  unsigned char _3: 1;
-  unsigned char _4: 1;
-  unsigned char _5: 1;
-  unsigned char _6: 1;
-  unsigned char _7: 1;
-  unsigned char _8: 1;
+  unsigned _1: 1;
+  unsigned _2: 1;
+  unsigned _3: 1;
+  unsigned _4: 1;
+  unsigned _5: 1;
+  unsigned _6: 1;
+  unsigned _7: 1;
+  unsigned _8: 1;
 } bits;
 
 int main(int argc, char *argv[]) {
@@ -20,12 +19,11 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  long n = atol(argv[1]) / 8; // making n a multiple of 8
+  long n = atol(argv[1]);
+  long size = (n + 7) / 8;
+  bits* sieve = calloc(size, sizeof(bits));
 
-  bits* sieve = malloc(sizeof(bits) * n);
-  memset(sieve, 0, sizeof(bits) * n);
-
-  for (long i = 2; i <= sqrt(n*8) + 1; i++) {
+  for (long i = 2; i <= sqrt(n) + 1; i++) {
     long index = i / 8;
     char offset = i % 8;
 
@@ -46,7 +44,7 @@ int main(int argc, char *argv[]) {
       continue;
     }
 
-    for (long j = i * 2; j < n*8; j += i) {
+    for (long j = i * 2; j < n; j += i) {
       long j_ind = j / 8;
       char j_off = j % 8;
 
@@ -70,7 +68,7 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  for (long i = 2; i < n*8; i++) {
+  for (long i = 2; i < n; i++) {
     long index = i / 8;
     char offset = i % 8;
 
