@@ -7,14 +7,14 @@
 
 void checkAndgrow(Vec* vec) {
   if (vec->size == vec->capacity) {
-    vec->capacity *= 2;
+    vec->capacity = vec->capacity * 3 / 2;
     vec->arr = realloc(vec->arr, sizeof(void*) * vec->capacity);
   }
 }
 
 void checkAndShrink(Vec* vec) {
-  if (vec->size < vec->capacity / 2) {
-    vec->capacity /= 2;
+  if (vec->size < vec->capacity * 2 / 3) {
+    vec->capacity = vec->capacity * 2 / 3;
     vec->arr = realloc(vec->arr, sizeof(void*) * vec->capacity);
   }
 }
@@ -32,10 +32,6 @@ void Vec_clear(Vec* vec) {
     free(vec->arr[i]);
   }
   free(vec->arr);
-}
-
-Vec_size_t Vec_size(Vec* vec) {
-  return vec->size;
 }
 
 void Vec_push(Vec* vec, void* val) {

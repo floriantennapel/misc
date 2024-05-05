@@ -17,9 +17,6 @@ void Vec_init(Vec* vec);
 /** completely deallocate all values in Vec */
 void Vec_clear(Vec* vec);
 
-/** number of elements in Vector */
-Vec_size_t Vec_size(Vec* vec);
-
 /** push a value to the end of the Vec */
 void Vec_push(Vec* vec, void* val);
 
