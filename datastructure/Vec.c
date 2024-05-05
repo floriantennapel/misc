@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
+#include <inttypes.h>
 
 #include "Vec.h"
 
@@ -28,7 +28,7 @@ void Vec_init(Vec* vec) {
 }
 
 void Vec_clear(Vec* vec) {
-  for (Vec_size_t i = 0; i < vec->size; i++) {
+  for (uint64_t i = 0; i < vec->size; i++) {
     free(vec->arr[i]);
   }
   free(vec->arr);
@@ -54,9 +54,9 @@ void* Vec_pop(Vec* vec) {
   return retval;
 }
 
-void* Vec_remove(Vec *vec, Vec_size_t index) {
+void* Vec_remove(Vec *vec, uint64_t index) {
   if (index >= vec->size) {
-    fprintf(stderr, "Vec insert: index %llu out of bounds for size %llu\n", index, vec->size);
+    fprintf(stderr, "Vec insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
     return NULL;
   } else if (index == vec->size - 1) {
     return Vec_pop(vec);
@@ -70,11 +70,11 @@ void* Vec_remove(Vec *vec, Vec_size_t index) {
   return retVal;
 }
 
-void Vec_insert(Vec *vec, void *val, Vec_size_t index) {
+void Vec_insert(Vec *vec, void *val, uint64_t index) {
   checkAndgrow(vec);
 
   if (index >= vec->size) {
-    fprintf(stderr, "Vec insert: index %llu out of bounds for size %llu\n", index, vec->size);
+    fprintf(stderr, "Vec insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
     exit(EXIT_FAILURE);
   }
 
@@ -83,18 +83,18 @@ void Vec_insert(Vec *vec, void *val, Vec_size_t index) {
   ++(vec->size);
 }
 
-void Vec_put(Vec *vec, void *val, Vec_size_t index) {
+void Vec_put(Vec *vec, void *val, uint64_t index) {
   if (index >= vec->size) {
-    fprintf(stderr, "Vec insert: index %llu out of bounds for size %llu\n", index, vec->size);
+    fprintf(stderr, "Vec insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
     exit(EXIT_FAILURE);
   }
 
   vec->arr[index] = val;
 }
 
-void* Vec_get(Vec *vec, Vec_size_t index) {
+void* Vec_get(Vec *vec, uint64_t index) {
   if (index >= vec->size) {
-    fprintf(stderr, "Vec insert: index %llu out of bounds for size %llu\n", index, vec->size);
+    fprintf(stderr, "Vec insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
     return NULL;
   }
   
