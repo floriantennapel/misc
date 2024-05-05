@@ -56,7 +56,7 @@ void* Vec_pop(Vec* vec) {
 
 void* Vec_remove(Vec *vec, uint64_t index) {
   if (index >= vec->size) {
-    fprintf(stderr, "Vec insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
+    fprintf(stderr, "Vec remove: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
     return NULL;
   } else if (index == vec->size - 1) {
     return Vec_pop(vec);
@@ -85,7 +85,7 @@ void Vec_insert(Vec *vec, void *val, uint64_t index) {
 
 void Vec_put(Vec *vec, void *val, uint64_t index) {
   if (index >= vec->size) {
-    fprintf(stderr, "Vec insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
+    fprintf(stderr, "Vec put: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
     exit(EXIT_FAILURE);
   }
 
@@ -94,7 +94,7 @@ void Vec_put(Vec *vec, void *val, uint64_t index) {
 
 void* Vec_get(Vec *vec, uint64_t index) {
   if (index >= vec->size) {
-    fprintf(stderr, "Vec insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
+    fprintf(stderr, "Vec get: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
     return NULL;
   }
   
