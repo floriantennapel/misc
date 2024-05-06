@@ -13,7 +13,8 @@ List* List_init();
  * DO NOT USE BEFORE HAVING FREE'D CONTENTS */
 void List_deinit(List* list);
 
-/** completely deallocate contents of List and reset List to initial state */
+/** completely deallocate contents of List and reset List to initial state 
+ * THIS FUNCTION MUST ONLY BE USED FOR LISTS CONTAINING HEAP ALLOCATED VALUES */
 void List_clear(List* list);
 
 /** number of elements in List */
