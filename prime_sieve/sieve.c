@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
   }
 
   long n = atol(argv[1]);
-  long size = n / 8 + 1;
+  long size = (n / 8) + 1;
   char* sieve = calloc(size, 1);
 
   if (!sieve) {
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
       continue;
     }
 
-    for (long j = i * 2; j < n; j += i) {
+    for (long j = i * i; j < n; j += i) {
       long j_ind = j / 8;
       char j_off = j % 8;
 
