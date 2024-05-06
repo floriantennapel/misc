@@ -148,7 +148,7 @@ void* List_remove(List* list, uint64_t index) {
 void List_insert(List* list, void* val, uint64_t index) {
   uint64_t size = list->size;
   if (index >= size || index < 0) {
-    fprintf(stderr, "List_remove: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, size);
+    fprintf(stderr, "List_insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, size);
     exit(1);
   }
 
@@ -181,7 +181,7 @@ void List_insert(List* list, void* val, uint64_t index) {
 void List_put(List* list, void* val, uint64_t index) {
   uint64_t size = list->size;
   if (index >= size || index < 0) {
-    fprintf(stderr, "List_remove: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, size);
+    fprintf(stderr, "List_put: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, size);
     exit(1);
   }
 
@@ -197,7 +197,7 @@ void List_put(List* list, void* val, uint64_t index) {
 void* List_get(List* list, uint64_t index) {
   uint64_t size = list->size;
   if (index >= size || index < 0) {
-    fprintf(stderr, "List_remove: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, size);
+    fprintf(stderr, "List_get: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, size);
     return NULL;
   }
 
