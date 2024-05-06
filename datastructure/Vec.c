@@ -1,102 +1,125 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
 
-#include "Vec.h"
+#include "List.h"
 
-void checkAndgrow(Vec* vec) {
-  if (vec->size == vec->capacity) {
-    vec->capacity = vec->capacity * 3 / 2;
-    vec->arr = realloc(vec->arr, sizeof(void*) * vec->capacity);
+struct _List {
+  uint64_t capacity;
+  uint64_t size;
+  void** arr; 
+};
+
+static void checkAndGrow(List* list) {
+  if (list->size == list->capacity) {
+    list->capacity = list->capacity * 3 / 2;
+    list->arr = realloc(list->arr, sizeof(void*) * list->capacity);
   }
 }
 
-void checkAndShrink(Vec* vec) {
-  if (vec->size < vec->capacity * 2 / 3) {
-    vec->capacity = vec->capacity * 2 / 3;
-    vec->arr = realloc(vec->arr, sizeof(void*) * vec->capacity);
+static void checkAndShrink(List* list) {
+  if (list->size < list->capacity * 2 / 3) {
+    list->capacity = list->capacity * 2 / 3;
+    list->arr = realloc(list->arr, sizeof(void*) * list->capacity);
   }
 }
 
-void Vec_init(Vec* vec) {
+List* List_init() {
   const int defaultSize = 8;
+  List* list = malloc(sizeof(struct _List));
 
-  vec->capacity = defaultSize;
-  vec->size = 0;
-  vec->arr = calloc(defaultSize, sizeof(void*));
+  list->capacity = defaultSize;
+  list->size = 0;
+  list->arr = calloc(defaultSize, sizeof(void*));
+
+  return list;
 }
 
-void Vec_clear(Vec* vec) {
-  for (uint64_t i = 0; i < vec->size; i++) {
-    free(vec->arr[i]);
+void List_deinit(List *list) {
+  free(list->arr);
+  free(list);
+}
+
+void List_clear(List* list) {
+  for (uint64_t i = 0; i < list->size; i++) {
+    free(list->arr[i]);
   }
-  free(vec->arr);
+  free(list->arr);
+
+  list->arr = calloc(8, sizeof(void*));
+  list->size = 0;
+  list->capacity = 8;
 }
 
-void Vec_push(Vec* vec, void* val) {
-  checkAndgrow(vec);
-
-  vec->arr[vec->size] = val;
-  ++(vec->size);
+uint64_t List_size(List *list) {
+  return list->size;
 }
 
-void* Vec_pop(Vec* vec) {
-  if (!(vec->size)) {
-    fprintf(stderr, "Vec is empty\n");
+void List_push(List* list, void* val) {
+  checkAndGrow(list);
+
+  list->arr[list->size] = val;
+  ++(list->size);
+}
+
+void* List_pop(List* list) {
+  if (!(list->size)) {
+    fprintf(stderr, "List is empty\n");
     return NULL;
   }
 
-  --(vec->size);
-  void* retval = vec->arr[vec->size];
+  --(list->size);
+  void* retval = list->arr[list->size];
   
-  checkAndShrink(vec);
+  checkAndShrink(list);
   return retval;
 }
 
-void* Vec_remove(Vec *vec, uint64_t index) {
-  if (index >= vec->size) {
-    fprintf(stderr, "Vec remove: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
+void* List_remove(List *list, uint64_t index) {
+  if (index >= list->size || index < 0) {
+    fprintf(stderr, "List remove: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, list->size);
     return NULL;
-  } else if (index == vec->size - 1) {
-    return Vec_pop(vec);
+  } else if (index == list->size - 1) {
+    return List_pop(list);
   }
 
-  void* retVal = vec->arr[index];
-  --(vec->size);
-  memmove(&(vec->arr[index]), &(vec->arr[index+1]), (vec->size - index) * sizeof(void*));
+  void* retVal = list->arr[index];
+  --(list->size);
+  memmove(&(list->arr[index]), &(list->arr[index+1]), (list->size - index) * sizeof(void*));
 
-  checkAndShrink(vec);
+  checkAndShrink(list);
   return retVal;
 }
 
-void Vec_insert(Vec *vec, void *val, uint64_t index) {
-  checkAndgrow(vec);
+void List_insert(List *list, void *val, uint64_t index) {
+  checkAndGrow(list);
 
-  if (index >= vec->size) {
-    fprintf(stderr, "Vec insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
+  if (index >= list->size || index < 0) {
+    fprintf(stderr, "List insert: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, list->size);
     exit(EXIT_FAILURE);
   }
 
-  memmove(&(vec->arr[index+1]), &(vec->arr[index]), (vec->size - index) * sizeof(void*));
-  vec->arr[index] = val;
-  ++(vec->size);
+  memmove(&(list->arr[index+1]), &(list->arr[index]), (list->size - index) * sizeof(void*));
+  list->arr[index] = val;
+  ++(list->size);
 }
 
-void Vec_put(Vec *vec, void *val, uint64_t index) {
-  if (index >= vec->size) {
-    fprintf(stderr, "Vec put: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
+void List_put(List *list, void *val, uint64_t index) {
+  if (index >= list->size || index < 0) {
+    fprintf(stderr, "List put: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, list->size);
     exit(EXIT_FAILURE);
   }
 
-  vec->arr[index] = val;
+  list->arr[index] = val;
 }
 
-void* Vec_get(Vec *vec, uint64_t index) {
-  if (index >= vec->size) {
-    fprintf(stderr, "Vec get: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, vec->size);
+void* List_get(List *list, uint64_t index) {
+  if (index >= list->size || index < 0) {
+    fprintf(stderr, "List get: index %"PRIu64" out of bounds for size %"PRIu64"\n", index, list->size);
     return NULL;
   }
   
-  return vec->arr[index];
+  return list->arr[index];
 }
