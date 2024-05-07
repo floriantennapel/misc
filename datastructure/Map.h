@@ -1,12 +1,36 @@
 #ifndef __MAP_H__
 #define __MAP_H__
 
+/* implementation of a hashmap
+ * example of use:
+ *
+ *
+  #include <string.h>
+
+  #include "Map.h"
+
+  #define MAP_SIZE 97
+
+  unsigned hashFunc(void* key) {
+    return HASH_STR(key, MAP_SIZE);
+  }
+
+  int cmp(void* a, void* b) {
+    return strcmp(a, b);
+  }
+
+  int main() {
+    Map* map = Map_init(hashFunc, cmp, MAP_SIZE); 
+    ...
+  }
+*/
+
 struct _Map;
 typedef struct _Map Map;
 
 /** creates a new hashmap
  * @param hashFunc function used to hash the datatype used, value should be from 0 to size-1
- * @param cmp comparison function, must return 0 at equal and anything else at not equal
+ * @param cmp comparison function for comparing key values, must return 0 at equal
  * @param size A PRIME number, approximately the number of elements the map should hold 
  *
  * NOTE: since it is preferable that size is prime, any none prime sizes will be rejected */
@@ -28,4 +52,10 @@ void* Map_get(Map* map, void* key);
 
 /** return value at given key, if no entry was found return the default */
 void* Map_getOrDefault(Map* map, void* key, void* defaultVal);
+
+/** simple hash function for strings
+ * based on the polynomial rolling hash function with a prime factor of 31
+ * forund here: https://algs4.cs.princeton.edu/34hash/
+ * because of the different arguments, this function must be wrapped before it can be given to Map_init */
+unsigned HASH_STR(char* key, unsigned size);
 #endif 

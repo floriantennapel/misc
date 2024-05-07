@@ -144,4 +144,13 @@ void* Map_getOrDefault(Map* map, void* key, void* defaultVal) {
   return result ? result : defaultVal;
 }
 
+unsigned HASH_STR(char* key, unsigned size) {
+  unsigned hash = 0;
+  const int R = 31;
+  for (char* c = key; *c != '\0'; c++) {
+    hash = (R * hash + *c) % size;
+    printf("%u\n", hash);
+  }
 
+  return hash;
+}
