@@ -1,5 +1,14 @@
-from queue import Queue
+from queue import PriorityQueue 
 
+def heuristic(current, target):
+    sum = 0
+    for i in range(8):
+        t_val = ord(target[i]) - ord('A')
+        c_val = ord(current[i]) - ord('A')
+
+        sum += (t_val + 6 - c_val) % 6
+
+    return sum / 3
 
 def rotated(icon):
     return chr((ord(icon) - ord('A') + 1) % 6 + ord('A'))
@@ -49,25 +58,25 @@ def get_next(current):
     return next
     
 
-def bfs(start, target):
+def a_star(start, target):
     visited = set()
-    queue = Queue()
-    queue.put((start, 0))
+    queue = PriorityQueue()
+    queue.put((0, 0, start))
 
     while not queue.empty():
         current = queue.get()
-        if current[0] in visited:
+        if current[2] in visited:
             continue
-        visited.add(current[0])
+        visited.add(current[2])
 
-        if current[0] == target:
+        if current[2] == target:
             return current[1]
         
-        for n in get_next(current[0]):
-            queue.put((n, current[1] + 1))
+        for n in get_next(current[2]):
+            queue.put((current[1] + 1 + heuristic(n, target), current[1] + 1, n))
 
 
 start = input().strip()
 target = input().strip()
 
-print(bfs(start, target))
+print(a_star(start, target))
