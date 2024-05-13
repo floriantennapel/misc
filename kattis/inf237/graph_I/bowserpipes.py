@@ -1,3 +1,5 @@
+from heapq import heappush
+
 class Room:
     def __init__(self, index, next_room):
         self.is_entry = True
@@ -22,7 +24,8 @@ class Room:
 
 n = int(input())
 rooms = list()
-entry_points = [list() for _ in range(n)] 
+entry_points = [[] for _ in range(n)] 
+
 
 def dfs(index, is_first_call):
     current = rooms[index]
@@ -48,13 +51,12 @@ def initialize():
     for i in range(n):
         current = rooms[i]
         if current.is_entry:
-            entry_points[current.end_room].append(current)
-
+            heappush(entry_points[current.end_room], current)
 
 
 def mario_path(start):
     end = rooms[start].end_room 
-    return min(entry_points[end]).index
+    return entry_points[end][0].index
 
 
 initialize()
