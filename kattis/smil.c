@@ -7,9 +7,11 @@ int main()
    fgets(line, 2050, stdin);
 
    int i = 0;
-   for (char* l = line; *l; l++) {
-      if (!strncmp(":)", l, 2) || !strncmp(";)", l, 2) || !strncmp(":-)", l, 3) || !strncmp(";-)", l, 3))
-         printf("%d\n", i);
+   for (char* c = line; *c; c++) {
+      if (*c == ':' || *c == ';') {
+         if (*(c+1) == ')' || !strncmp("-)", c+1, 2))
+            printf("%d\n", i);
+      }
       i++;
    }
 }
