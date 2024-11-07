@@ -12,7 +12,7 @@
         _##HEAP_NAME##List arr; \
     } HEAP_NAME; \
     \
-    HEAP_NAME HEAP_NAME##_new(size_t capacity) \
+    HEAP_NAME HEAP_NAME##_new(long capacity) \
     { \
         return (HEAP_NAME) { _##HEAP_NAME##List_new(capacity) }; \
     } \
