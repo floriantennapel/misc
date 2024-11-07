@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
@@ -125,43 +126,23 @@ int main()
 {
     int test_counter = 0;
     int pass_counter = 0;
+
+    int (*tests[])() = {
+        negative_capacity_defaults,
+        resizes_correctly,
+        index_out_of_bounds,
+        pop_empty,
+        str_test,
+        index_out_of_bounds_2
+    };
+
+    for (int i = 0; i < sizeof(tests) / sizeof(void*); i++) {
+        ++test_counter;
+        if (tests[i]()) {
+            ++pass_counter;
+            pass(test_counter);
+        } else fail(test_counter);
+    }
     
-    // test 1
-    test_counter++;    
-    if (negative_capacity_defaults()) {
-        ++pass_counter;
-        pass(test_counter);
-    } else fail(test_counter);
-
-    test_counter++;    
-    if (resizes_correctly()) {
-        ++pass_counter;
-        pass(test_counter);
-    } else fail(test_counter);
-
-    test_counter++;    
-    if (index_out_of_bounds()) {
-        ++pass_counter;
-        pass(test_counter);
-    } else fail(test_counter);
-
-    test_counter++;    
-    if (pop_empty()) {
-        ++pass_counter;
-        pass(test_counter);
-    } else fail(test_counter);
-
-    test_counter++;    
-    if (str_test()) {
-        ++pass_counter;
-        pass(test_counter);
-    } else fail(test_counter);
-
-    test_counter++;    
-    if (index_out_of_bounds_2()) {
-        ++pass_counter;
-        pass(test_counter);
-    } else fail(test_counter);
-
     printf("\n**********************\n * %d/%d tests passed * \n**********************\n", pass_counter, test_counter);
 }
