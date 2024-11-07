@@ -23,7 +23,7 @@
     \
     void LIST_NAME##_free(LIST_NAME* list) \
     { \
-        if (list) \
+        if (list && list->arr) \
             free(list->arr); \
     } \
     \
@@ -47,6 +47,19 @@
             exit(1); \
         } \
         return list->arr + i; \
+    } \
+    \
+    void LIST_NAME##_set(LIST_NAME* list, LIST_TYPE val, size_t i) \
+    { \
+        if (!list) { \
+            fprintf(stderr, #LIST_NAME "_set, list cannot be NULL\n"); \
+            exit(1); \
+        } \
+        if (i < 0 || i >= list->size) { \
+            fprintf(stderr, #LIST_NAME "_set, index out of bounds\n"); \
+            exit(1); \
+        } \
+        list->arr[i] = val; \
     } \
     \
     void LIST_NAME##_push(LIST_NAME* list, LIST_TYPE val) \
