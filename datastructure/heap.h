@@ -53,8 +53,8 @@
         size_t ind = _##HEAP_NAME##List_size(&(heap->arr)) - 1; \
         while (ind > 0) { \
             size_t parent_ind = (ind - 1) / 2; \
-            HEAP_TYPE* current = (HEAP_TYPE*) _##HEAP_NAME##List_get(&(heap->arr), ind); \
-            HEAP_TYPE* parent = (HEAP_TYPE*) _##HEAP_NAME##List_get(&(heap->arr), parent_ind); \
+            HEAP_TYPE* current =  _##HEAP_NAME##List_get(&(heap->arr), ind); \
+            HEAP_TYPE* parent =  _##HEAP_NAME##List_get(&(heap->arr), parent_ind); \
             if (HEAP_COMPARE(current, parent) >= 0) \
                 break; \
             \

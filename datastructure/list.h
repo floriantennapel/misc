@@ -38,7 +38,7 @@
         return list->size; \
     } \
     \
-    const LIST_TYPE* LIST_NAME##_get(const LIST_NAME* list, long i) \
+    LIST_TYPE* LIST_NAME##_get(const LIST_NAME* list, long i) \
     { \
         if (!list) { \
             fprintf(stderr, #LIST_NAME "_get, list cannot be NULL\n"); \
