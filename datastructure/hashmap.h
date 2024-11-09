@@ -69,6 +69,32 @@
         return _##HASHMAP_NAME##_get_entry(map, key) != NULL; \
     } \
     \
+    void _##HASHMAP_NAME##_grow(HASHMAP_NAME* map) \
+    { \
+        size_t old_capacity = map->capacity; \
+        map->capacity *= 2; \
+        \
+        _##HASHMAP_NAME##Entry** new_arr = calloc(map->capacity, sizeof(void*)); \
+        if (!new_arr) { \
+            perror("_" #HASHMAP_NAME "_grow, calloc"); \
+            exit(1); \
+        } \
+        \
+        for (size_t i = 0; i < old_capacity; i++) { \
+            _##HASHMAP_NAME##Entry* current = map->arr[i]; \
+            while (current) { \
+                _##HASHMAP_NAME##Entry* next = current->next; \
+                size_t hash_ind = HASHMAP_HASH(&(current->key)) % map->capacity; \
+                current->next = new_arr[hash_ind]; \
+                new_arr[hash_ind] = current; \
+                current = next; \
+            } \
+        } \
+        \
+        free(map->arr); \
+        map->arr = new_arr; \
+    } \
+    \
     void HASHMAP_NAME##_insert(HASHMAP_NAME* map, HASHMAP_KEYTYPE key, HASHMAP_VALTYPE value) \
     { \
         if (!map) { \
@@ -94,6 +120,9 @@
         *new_entry = (_##HASHMAP_NAME##Entry) { .key = key, .value = value, .next = NULL }; \
         *prev = new_entry; \
         ++(map->size); \
+        \
+        if (map->size > HASHMAP_LOAD_FACTOR * map->capacity) \
+            _##HASHMAP_NAME##_grow(map); \
     } \
     \
     HASHMAP_VALTYPE* HASHMAP_NAME##_get(const HASHMAP_NAME* map, const HASHMAP_KEYTYPE* key) \

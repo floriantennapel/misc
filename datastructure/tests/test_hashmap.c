@@ -17,8 +17,8 @@ void fail(int i)
 
 void supress_output()
 {
-    freopen("/dev/null", "w", stdout);
-    freopen("/dev/null", "w", stderr);
+    FILE* ignore_so_compiler_stops_complaining = freopen("/dev/null", "w", stdout);
+    ignore_so_compiler_stops_complaining = freopen("/dev/null", "w", stderr);
 }
 
 typedef struct 
@@ -41,6 +41,20 @@ size_t hash(const Str* str)
         h = ((h << 5) + h) + c;
     return h; 
 }
+
+// java hash
+/*size_t hash(const Str* str) 
+{
+    const char* s = str->s;
+    int c;
+    int h = 0;
+    while ((c = *s++)) {
+        h = 31 * h + (c & 0xff);
+    }
+
+    return h;
+}*/
+
 // terrible hashing function
 // size_t hash(const Str* str) { return 0; }
 
@@ -51,10 +65,39 @@ const Str words[] = {
     (Str){"bunch"}, 
     (Str){"of"}, 
     (Str){"testing"}, 
-    (Str){"words"}
+    (Str){"words."},
+    (Str){"I"},
+    (Str){"might"},
+    (Str){"add"},
+    (Str){"some"},
+    (Str){"more"},
+    (Str){"later"},
+    (Str){", however"},
+    (Str){"I currently"},
+    (Str){"feel"},
+    (Str){"like"},
+    (Str){"it"},
+    (Str){"should"},
+    (Str){"be"},
+    (Str){"enough"},
 };
 
 DECLARE_HASHMAP(SIMap, Str, int, eq, hash)
+
+// used for debugging
+void print_hashmap(const SIMap* map)
+{
+    puts("\n*******************************");
+    for (int i = 0; i < map->capacity; i++) {
+        _SIMapEntry* current = map->arr[i];
+        while (current) {
+            printf("(%s, %d) ", current->key.s, current->value);
+            current = current->next;
+        }
+        puts("-");
+    }
+    puts("********************************");
+}
 
 int initial_capacity_is_2pow()
 {
@@ -151,9 +194,9 @@ DECLARE_HASHMAP(ISet, int, None, int_eq, int_hash)
 // run program using valgrind
 int leak_test()
 {
-    ISet set = ISet_new(1 << 20); // adjust value for different testing purposes, valgrind will use ages with high values
+    ISet set = ISet_new(0);
     None n;
-    int n_elems = set.capacity * 0.75;
+    int n_elems = 1000000;
     for (int i = 0; i < n_elems; i++) {
         if (ISet_get(&set, &i)) return 0;
         ISet_insert(&set, i, n);
@@ -188,5 +231,4 @@ int main()
     }
     
     printf("\n************************\n * %2d/%2d tests passed * \n************************\n", pass_counter, test_counter);
-    puts("remember to re-run tests with bad hash function");
 }
