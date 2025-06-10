@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "c_macros/datastructures/hashmap.h"
+#include "c_macros/datastructures/vec.h"
 #include "c_macros/datastructures/heap.h"
 
 typedef unsigned long ul;
@@ -12,14 +12,12 @@ typedef struct
 
 typedef struct
 {
-    int p[2];
-} Pair;
+    int p[3];
+} Triple;
 
-#define INT_HASH(KEY) (*(KEY))
-#define INT_EQ(A, B) (*(A) == *(B))
 #define PQ_CMP(A, B) ((A)->cost < (B)->cost ? -1 : ((A)->cost > (B)->cost ? 1 : 0))
 
-HASHMAP_DEFINE(Map, int, Pair, INT_HASH, INT_EQ)
+VEC_DEFINE(Vec, Triple)
 HEAP_DEFINE(PQ, PQNode, PQ_CMP)
 
 int main()
@@ -28,16 +26,16 @@ int main()
     scanf("%d %d", &n, &m);
 
     int lodging[n+1];
-    Map graph[n+1];
+    Vec graph[n+1];
     for (int i = 1; i <= n; i++) {
         scanf("%d", lodging+i);
-        graph[i] = Map_new(0);
+        graph[i] = Vec_new(0);
     }
 
     while (m--) {
         scanf("%d %d %d %d", &u, &v, &a, &b);
-        Map_insert(graph+u, v, (Pair){{a, b}});
-        Map_insert(graph+v, u, (Pair){{a, b}});
+        Vec_push(graph+u, (Triple){{a, b, v}});
+        Vec_push(graph+v, (Triple){{a, b, u}});
     }
     
     ul travel_costs[n+1];
@@ -60,9 +58,11 @@ int main()
                 if (cost < min_cost)
                     min_cost = cost;
             }
-            for (MapIter it = Map_iter(graph+current.node); it.current; MapIter_inc(&it)) {
-                if (!visited[it.current->key])
-                    PQ_push(&q, (PQNode){it.current->key, it.current->value.p[i]+current.cost});
+            Vec* adj = graph+current.node;
+            for (int j = 0; j < adj->size; j++) {
+                Triple next = adj->arr[j];
+                if (!visited[next.p[2]])
+                    PQ_push(&q, (PQNode){next.p[2], next.p[i]+current.cost});
             }
         }
     }
